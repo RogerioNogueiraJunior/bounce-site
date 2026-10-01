@@ -959,22 +959,18 @@ section {
   }
   .beat-choice {
     min-height: 135px;
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    gap: 0 12px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
     padding: 16px 22px;
   }
   .beat-choice strong {
     font-size: 3.8rem;
+    line-height: 1;
   }
-  .beat-choice > span:last-of-type:not(.choice-mark) {
-    grid-column: 2;
-    align-self: start;
-  }
-  .beat-choice .beat-number {
-    align-self: start;
-    padding-top: 12px;
+  .beat-choice > span:not(.choice-mark) {
+    margin-top: 4px;
   }
   .beat-choice .choice-mark {
     top: 24px;
