@@ -4,7 +4,7 @@
   const image = document.querySelector('#loading-animation');
   const progress = document.querySelector('.loading-progress__fill');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const cycleDuration = 5000;
+  const cycleDuration = 2500;
   let timer, objectURL, request, progressFrame;
   let sequence = 0;
   let previousFocus;
