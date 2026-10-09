@@ -1,13 +1,6 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "yv2pd8h56v");
-    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#080808" />
@@ -55,13 +48,20 @@
         ><span class="brand-label">PRODUTORA<br />MUSICAL</span></a
       >
       <nav aria-label="Navegação principal">
-        <a href="#som">Nosso som</a><a href="#servicos">O que fazemos</a
+        <a href="#som">Nosso som</a><a href="#posts">Posts</a><a href="#servicos">O que fazemos</a
         ><a href="#beats">Beats</a>
       </nav>
       <a class="button small light" href="#contato">Fale com a Bounce</a>
     </header>
     <main id="conteudo">
-      <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div
+        class="hero-carousel"
+        id="hero-carousel"
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Destaques da Bounce"
+      >
+      <section class="hero hero-slide" id="inicio" aria-labelledby="hero-title">
         <div class="hero-top">
           <span>BOUNCE THAT SH*T</span><span>TRAP / RAP / EDM</span>
         </div>
@@ -186,7 +186,7 @@
           <div>
             <span class="eyebrow">ARTISTAS & LANÇAMENTOS</span>
             <h3>yReshard</h3>
-            <p>Conheça o trabalho de yReshard, artista da Bounce.</p>
+            <p>Conheça o trabalho de Vulgo m.v, artista da Bounce.</p>
           </div>
           <a class="spotify-link" href="https://open.spotify.com/intl-pt/artist/7c9KASB2J6pKXUUuF6yYhU?si=hjIlf4NbQCWPU_rJ29IS6w" target="_blank" rel="noopener noreferrer"  >Ouvir no Spotify</a>
         </div>
@@ -206,6 +206,33 @@
           src="https://open.spotify.com/embed/artist/7c9KASB2J6pKXUUuF6yYhU?si=hjIlf4NbQCWPU_rJ29IS6w?utm_source=oembed&theme=0"
         >
       </iframe>
+      </section>
+      <section class="section posts" id="posts" aria-labelledby="posts-title">
+        <div class="section-top">
+          <span class="tiny">ACOMPANHE A BOUNCE.</span>
+        </div>
+        <div class="section-heading">
+          <h2 id="posts-title">ÚLTIMOS<br /><em>REELS.</em></h2>
+          <p>
+            Os reels mais recentes do nosso Instagram, sempre atualizados.
+          </p>
+        </div>
+        <div class="reels">
+          <ul class="reels-track" id="reels-track" tabindex="0" aria-label="Reels do Instagram da Bounce">
+            <li class="reel-item">
+              <a class="reel-card reel-card--cta" href="https://www.instagram.com/bounce_312/" target="_blank" rel="noopener noreferrer">
+                <strong>@bounce_312</strong><span>Ver reels no Instagram</span>
+              </a>
+            </li>
+          </ul>
+          <div class="reels-bar">
+            <a class="text-link" href="https://www.instagram.com/bounce_312/" target="_blank" rel="noopener noreferrer">Seguir @bounce_312 no Instagram</a>
+            <div class="reels-controls">
+              <button type="button" class="reels-btn" id="reels-prev" aria-label="Reels anteriores">←</button>
+              <button type="button" class="reels-btn" id="reels-next" aria-label="Próximos reels">→</button>
+            </div>
+          </div>
+        </div>
       </section>
       <section class="section services" id="servicos" aria-labelledby="services-title">
         <div class="section-top">
@@ -317,7 +344,7 @@
             <span class="choice-mark" aria-hidden="true">✓</span>
           </button>
           <button class="beat-choice" data-genre="Rap" aria-pressed="false">
-            <strong>RAP</strong><span>BOOMBAP • HIP HOP • ETC</span>
+            <strong>RAP</strong><span>BOOMPAP • HIP HOP • ETC</span>
             <span class="choice-mark" aria-hidden="true">✓</span>
           </button>
           <button class="beat-choice" data-genre="EDM" aria-pressed="false">

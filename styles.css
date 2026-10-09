@@ -220,6 +220,7 @@ figcaption {
   padding: 30px 4.5% 24px;
   display: flex;
   flex-direction: column;
+  background: var(--bg);
 }
 .hero-top,
 .hero-bottom {
@@ -1242,4 +1243,255 @@ html.loading-open {
   justify-content: center;
   align-content: center;
   outline: none;
+}
+
+/* ---------- Posts / Reels ---------- */
+.posts {
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+}
+.reels-track {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 8px;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.reels-track::-webkit-scrollbar {
+  display: none;
+}
+.reel-item {
+  flex: 0 0 clamp(210px, 22vw, 290px);
+  scroll-snap-align: start;
+}
+.reel-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.reel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.reel-card:hover img {
+  transform: scale(1.04);
+}
+.reel-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 55%, rgba(0, 0, 0, 0.85));
+  pointer-events: none;
+}
+.reel-play {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.75rem;
+}
+.reel-caption {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.reel-card--cta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 24px;
+}
+.reel-card--cta::after {
+  display: none;
+}
+.reel-card--cta strong {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  line-height: 0.95;
+  color: var(--red);
+}
+.reel-card--cta span {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.reels-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 28px;
+}
+.reels-controls {
+  display: flex;
+  gap: 10px;
+}
+.reels-btn {
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: 1px solid #444;
+  font-size: 1.1rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+.reels-btn:hover:not(:disabled) {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.reels-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+@media (max-width: 700px) {
+  .reel-item {
+    flex-basis: 62%;
+  }
+  .reels-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.reel-item--embed {
+  flex-basis: 326px;
+  height: 620px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.reel-item--embed iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+@media (max-width: 700px) {
+  .reel-item--embed {
+    flex-basis: min(326px, 88%);
+  }
+}
+
+.reels-controls[hidden] {
+  display: none;
+}
+
+/* ---------- Carrossel da página inicial ---------- */
+.hero-carousel {
+  --banner-bg: #303030;
+  /* Proporção de cada parte no celular (largura / altura). Use 4 / 3 para deitado. */
+  --part-ratio: 3 / 4;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+.hero-slide--banner,
+.hero-slide--part {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--banner-bg);
+}
+.hero-slide--banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.hero-part {
+  width: 100%;
+  aspect-ratio: var(--part-ratio);
+  background: var(--banner-bg);
+}
+.hero-part img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-slide[data-view="mobile"] {
+  display: none;
+}
+
+/* Só vale com JS ativo (is-ready). Sem JS, a primeira tela aparece normalmente. */
+.hero-carousel.is-ready .hero-slide:not(.is-active) {
+  visibility: hidden;
+  transform: translateX(-100%);
+}
+.hero-carousel.is-ready .hero-slide.is-entering {
+  visibility: visible;
+}
+.hero-carousel.is-ready .hero-slide.is-leaving {
+  visibility: visible;
+  transform: translateX(100%);
+}
+.hero-carousel.is-ready .hero-slide.is-active {
+  visibility: visible;
+  transform: none;
+}
+.hero-carousel.is-animating .hero-slide {
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.hero-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+.hero-dot {
+  width: 30px;
+  height: 24px;
+  padding: 10px 0;
+  border: 0;
+  background: var(--fg);
+  background-clip: content-box;
+  opacity: 0.3;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+.hero-dot[aria-current="true"] {
+  background-color: var(--red);
+  opacity: 1;
+}
+.hero-dot:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 700px) {
+  .hero-slide[data-view="desktop"] {
+    display: none;
+  }
+  .hero-slide[data-view="mobile"] {
+    display: flex;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel.is-animating .hero-slide {
+    transition: none;
+  }
 }
