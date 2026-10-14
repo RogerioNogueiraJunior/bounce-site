@@ -2,7 +2,7 @@
 
 // Add only verified business contact details supplied by Bounce.
 const CONTACT = {
-  whatsapp: '5511969537986',
+  whatsapp: '5511933527544',
   email: 'vitor.natale9@gmail.com',
 };
 
