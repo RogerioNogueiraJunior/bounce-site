@@ -338,7 +338,7 @@ if (heroCarousel) {
   const HERO_TRANSITION = 800;
   const allSlides = [...heroCarousel.querySelectorAll('.hero-slide')];
   
-  // CORREÇÃO: Cria o elemento de pontos do carrossel caso ele não exista no HTML
+  // SOLUÇÃO 1: Evita que o código quebre se as "dots" não existirem no HTML
   let dotsBox = heroCarousel.querySelector('.hero-dots');
   if (!dotsBox) {
     dotsBox = document.createElement('div');
@@ -383,4 +383,183 @@ if (heroCarousel) {
     const animate = !reducedMotion.matches;
 
     busy = true;
-    clearTimeout(
+    clearTimeout(timer);
+
+    entering.classList.add('is-entering');
+    void entering.offsetWidth;
+
+    if (animate) {
+      heroCarousel.classList.add('is-animating');
+    }
+
+    leaving.classList.remove('is-active');
+    leaving.classList.add('is-leaving');
+    entering.classList.remove('is-entering');
+    entering.classList.add('is-active');
+    current = next;
+    updateDots();
+
+    finishTimer = setTimeout(
+      () => {
+        heroCarousel.classList.remove('is-animating');
+        leaving.classList.remove('is-leaving');
+        busy = false;
+        schedule();
+      },
+      animate ? HERO_TRANSITION + 50 : 0
+    );
+  }
+
+  function setupHeroCarousel() {
+    clearTimeout(timer);
+    clearTimeout(finishTimer);
+    busy = false;
+    heroCarousel.classList.remove('is-animating');
+
+    allSlides.forEach((slide) => {
+      slide.classList.remove('is-active', 'is-leaving', 'is-entering');
+    });
+
+    slides = allSlides.filter(appliesToView);
+    current = 0;
+    slides[0].classList.add('is-active');
+    heroCarousel.classList.add('is-ready');
+
+    dotsBox.replaceChildren(
+      ...slides.map((_, index) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'hero-dot';
+        dot.setAttribute('aria-label', `Ir para o destaque ${index + 1} de ${slides.length}`);
+        dot.addEventListener('click', () => goTo(index));
+        return dot;
+      })
+    );
+    dotsBox.hidden = slides.length < 2;
+
+    updateDots();
+    schedule();
+  }
+
+  heroCarousel.addEventListener('focusin', (event) => {
+    if (!event.target.matches(':focus-visible')) {
+      return;
+    }
+    focusPaused = true;
+    clearTimeout(timer);
+  });
+  heroCarousel.addEventListener('focusout', () => {
+    focusPaused = false;
+    schedule();
+  });
+
+  document.addEventListener('visibilitychange', schedule);
+  mobileQuery.addEventListener('change', setupHeroCarousel);
+
+  setupHeroCarousel();
+}
+
+// ---------- Contagem regressiva do single ----------
+const countdown = document.querySelector('#countdown');
+
+if (countdown) {
+  // SOLUÇÃO 2: Formato universal de datas à prova de falhas em todos os navegadores
+  const COUNTDOWN_START = new Date(2026, 9, 20, 0, 0, 0).getTime();
+  const COUNTDOWN_END = new Date(2026, 10, 3, 0, 0, 0).getTime();
+  
+  const cover = countdown.querySelector('#countdown-cover');
+  const note = countdown.querySelector('#countdown-note');
+  const parts = {
+    days: countdown.querySelector('#cd-days'),
+    hours: countdown.querySelector('#cd-hours'),
+    minutes: countdown.querySelector('#cd-minutes'),
+    seconds: countdown.querySelector('#cd-seconds'),
+  };
+  const pad = (value) => String(value).padStart(2, '0');
+
+  function tickCountdown() {
+    const now = Date.now();
+    const remaining = Math.max(0, COUNTDOWN_END - now);
+    const progress = Math.min(1, Math.max(0, (now - COUNTDOWN_START) / (COUNTDOWN_END - COUNTDOWN_START)));
+    const totalSeconds = Math.floor(remaining / 1000);
+
+    parts.days.textContent = pad(Math.floor(totalSeconds / 86400));
+    parts.hours.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
+    parts.minutes.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
+    parts.seconds.textContent = pad(totalSeconds % 60);
+    cover.style.setProperty('--reveal', progress.toFixed(4));
+
+    if (remaining === 0) {
+      countdown.classList.add('is-done');
+      // SOLUÇÃO 3: Impede o erro ao zerar a contagem, caso o "note" não exista
+      if (note) {
+        note.textContent = 'Single disponível agora.';
+      }
+      return false;
+    }
+    return true;
+  }
+
+  if (tickCountdown()) {
+    const countdownInterval = setInterval(() => {
+      if (!tickCountdown()) {
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  }
+}
+
+document.querySelector('#year').textContent = new Date().getFullYear();
+
+if (document.modelContext?.registerTool) {
+  const lifecycle = new AbortController();
+  const register = (tool) => {
+    try {
+      Promise.resolve(document.modelContext.registerTool(tool, { signal: lifecycle.signal })).catch(
+        () => {}
+      );
+    } catch {
+      // ignore registration errors in unsupported environments
+    }
+  };
+
+  register({
+    name: 'select_beat_genre',
+    title: 'Selecionar estilo de beat',
+    description: 'Seleciona Trap, Rap, EDM ou FUNK na página. Não compra nem envia pedidos.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        genre: {
+          type: 'string',
+          enum: ['Trap', 'Rap', 'EDM', 'FUNK'],
+        },
+      },
+      required: ['genre'],
+      additionalProperties: false,
+    },
+    annotations: { readOnlyHint: false },
+    execute: (input) => selectGenre(input.genre),
+  });
+
+  register({
+    name: 'start_project_brief',
+    title: 'Começar pedido de orçamento',
+    description: 'Abre a seção de orçamento com o serviço selecionado. Não envia o pedido.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        service: {
+          type: 'string',
+          enum: [...serviceSelect.options].map((option) => option.value),
+        },
+      },
+      required: ['service'],
+      additionalProperties: false,
+    },
+    annotations: { readOnlyHint: false },
+    execute: (input) => startBrief(input.service),
+  });
+
+  window.addEventListener('pagehide', () => lifecycle.abort(), { once: true });
+}
