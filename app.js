@@ -2,8 +2,8 @@
 
 // Add only verified business contact details supplied by Bounce.
 const CONTACT = {
-  whatsapp: '5511969537986',
-  email: 'vitor.natale9@gmail.com',
+  whatsapp: '5511933527544',
+  email: 'contato.bounce312@gmail.com',
 };
 
 const genreCopy = {
@@ -467,6 +467,52 @@ if (heroCarousel) {
   setupHeroCarousel();
 }
 
+// ---------- Contagem regressiva do single ----------
+// Começa em 20/10/2026 e zera em 03/11/2026 (horário de Brasília). A capa se revela do início ao fim.
+const countdown = document.querySelector('#countdown');
+
+if (countdown) {
+  const COUNTDOWN_START = new Date('2026-10-20T00:00:00-03:00').getTime();
+  const COUNTDOWN_END = new Date('2026-11-03T00:00:00-03:00').getTime();
+  const cover = countdown.querySelector('#countdown-cover');
+  const note = countdown.querySelector('#countdown-note');
+  const parts = {
+    days: countdown.querySelector('#cd-days'),
+    hours: countdown.querySelector('#cd-hours'),
+    minutes: countdown.querySelector('#cd-minutes'),
+    seconds: countdown.querySelector('#cd-seconds'),
+  };
+  const pad = (value) => String(value).padStart(2, '0');
+
+  function tickCountdown() {
+    const now = Date.now();
+    const remaining = Math.max(0, COUNTDOWN_END - now);
+    const progress = Math.min(1, Math.max(0, (now - COUNTDOWN_START) / (COUNTDOWN_END - COUNTDOWN_START)));
+    const totalSeconds = Math.floor(remaining / 1000);
+
+    parts.days.textContent = pad(Math.floor(totalSeconds / 86400));
+    parts.hours.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
+    parts.minutes.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
+    parts.seconds.textContent = pad(totalSeconds % 60);
+    cover.style.setProperty('--reveal', progress.toFixed(4));
+
+    if (remaining === 0) {
+      countdown.classList.add('is-done');
+      note.textContent = 'Single disponível agora.';
+      return false;
+    }
+    return true;
+  }
+
+  if (tickCountdown()) {
+    const countdownInterval = setInterval(() => {
+      if (!tickCountdown()) {
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  }
+}
+
 document.querySelector('#year').textContent = new Date().getFullYear();
 
 if (document.modelContext?.registerTool) {
@@ -521,4 +567,3 @@ if (document.modelContext?.registerTool) {
 
   window.addEventListener('pagehide', () => lifecycle.abort(), { once: true });
 }
-
