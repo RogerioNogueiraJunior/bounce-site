@@ -54,28 +54,37 @@
       <a class="button small light" href="#contato">Fale com a Bounce</a>
     </header>
     <main id="conteudo">
-      <section class="countdown" id="countdown" aria-labelledby="countdown-title">
-        <div class="countdown-info">
-          <div class="countdown-timer" id="countdown-timer" role="timer" aria-label="Tempo restante para o lançamento">
-            <div class="cd-unit"><span class="cd-num" id="cd-days">00</span><span class="cd-label">DIAS</span></div>
-            <span class="cd-sep" aria-hidden="true">:</span>
-            <div class="cd-unit"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">HORAS</span></div>
-            <span class="cd-sep" aria-hidden="true">:</span>
-            <div class="cd-unit"><span class="cd-num" id="cd-minutes">00</span><span class="cd-label">MIN</span></div>
-            <span class="cd-sep" aria-hidden="true">:</span>
-            <div class="cd-unit"><span class="cd-num" id="cd-seconds">00</span><span class="cd-label">SEG</span></div>
-          </div>
-        </div>
-        <div class="countdown-cover" id="countdown-cover" style="--reveal: 0">
-          <img
-            src="assets/po-e-lolo-capa.png"
-            alt="Capa do single da Bounce"
-            width="1080"
-            height="1080"
-          />
-          <div class="countdown-veil" aria-hidden="true"><span>?</span></div>
-        </div>
-      </section>
+
+    <!-- Filtro SVG invisível para a distorção do buraco negro -->
+    <svg width="0" height="0" style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+      <defs>
+        <filter id="blackhole-distortion">
+          <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="2" result="noise" />
+          <feDisplacementMap id="blackhole-map" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+
+    <section class="presave-hero" id="presave" aria-label="Pré-save Pó e Loló">
+      <div class="presave-container">
+        <img
+          src="assets/pó e lolo hero section.png"
+          alt="Pó e Loló — Faça o Pré Save"
+          class="presave-banner-img"
+          width="1024"
+          height="512"
+        />
+
+        <!-- Botão com wrapper interno para atração magnética -->
+        <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="presave-cta">
+          <span class="presave-cta-content">
+            <img src="assets/bounce logo white.svg" alt="Bounce" class="presave-bounce-logo" width="95" height="38" />
+            <span class="presave-cta-text">OUVIR DIA 07/11</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
       <div
         class="hero-carousel"
         id="hero-carousel"

@@ -32,6 +32,67 @@ const genreSelect = document.querySelector('#genre');
 const serviceSelect = document.querySelector('#service');
 const dialog = document.querySelector('#brief-dialog');
 const form = document.querySelector('#brief-form');
+// ---------- Efeito Buraco Negro / Distorção Gravitacional ----------
+const presaveBtn = document.querySelector('.presave-cta');
+const displacementMap = document.querySelector('#blackhole-map');
+const ctaContent = document.querySelector('.presave-cta-content');
+const turbulence = document.querySelector('#blackhole-distortion feTurbulence');
+
+if (presaveBtn && displacementMap && ctaContent) {
+  let targetScale = 0;
+  let currentScale = 0;
+
+  presaveBtn.addEventListener('mouseenter', () => {
+    presaveBtn.classList.add('is-distorting');
+    targetScale = 35;
+  });
+
+  presaveBtn.addEventListener('mousemove', (e) => {
+    const rect = presaveBtn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const distFromCenter = Math.hypot(x - centerX, y - centerY);
+    const maxDist = Math.hypot(centerX, centerY);
+
+    // Ajusta a intensidade da distorção conforme a proximidade
+    targetScale = 20 + (distFromCenter / maxDist) * 35;
+
+    // Atração magnética do texto e do logótipo em direção ao cursor
+    const moveX = (x - centerX) * 0.22;
+    const moveY = (y - centerY) * 0.22;
+    ctaContent.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.95)`;
+  });
+
+  presaveBtn.addEventListener('mouseleave', () => {
+    targetScale = 0;
+    ctaContent.style.transform = 'translate(0px, 0px) scale(1)';
+
+    setTimeout(() => {
+      if (currentScale < 1) {
+        presaveBtn.classList.remove('is-distorting');
+      }
+    }, 250);
+  });
+
+  function renderBlackHole() {
+    currentScale += (targetScale - currentScale) * 0.12;
+    displacementMap.setAttribute('scale', currentScale.toFixed(2));
+
+    if (currentScale > 0.5 && turbulence) {
+      const time = Date.now() * 0.003;
+      const freqX = (0.02 + Math.sin(time) * 0.008).toFixed(4);
+      const freqY = (0.04 + Math.cos(time) * 0.008).toFixed(4);
+      turbulence.setAttribute('baseFrequency', `${freqX} ${freqY}`);
+    }
+
+    requestAnimationFrame(renderBlackHole);
+  }
+
+  renderBlackHole();
+}
 
 function selectGenre(genre) {
   if (!Object.hasOwn(genreCopy, genre)) {
@@ -338,7 +399,6 @@ if (heroCarousel) {
   const HERO_TRANSITION = 800;
   const allSlides = [...heroCarousel.querySelectorAll('.hero-slide')];
   
-  // SOLUÇÃO 1: Evita que o código quebre se as "dots" não existirem no HTML
   let dotsBox = heroCarousel.querySelector('.hero-dots');
   if (!dotsBox) {
     dotsBox = document.createElement('div');
@@ -457,56 +517,6 @@ if (heroCarousel) {
   mobileQuery.addEventListener('change', setupHeroCarousel);
 
   setupHeroCarousel();
-}
-
-// ---------- Contagem regressiva do single ----------
-const countdown = document.querySelector('#countdown');
-
-if (countdown) {
-  // SOLUÇÃO 2: Formato universal de datas à prova de falhas em todos os navegadores
-  const COUNTDOWN_START = new Date(2026, 9, 20, 0, 0, 0).getTime();
-  const COUNTDOWN_END = new Date(2026, 10, 3, 0, 0, 0).getTime();
-  
-  const cover = countdown.querySelector('#countdown-cover');
-  const note = countdown.querySelector('#countdown-note');
-  const parts = {
-    days: countdown.querySelector('#cd-days'),
-    hours: countdown.querySelector('#cd-hours'),
-    minutes: countdown.querySelector('#cd-minutes'),
-    seconds: countdown.querySelector('#cd-seconds'),
-  };
-  const pad = (value) => String(value).padStart(2, '0');
-
-  function tickCountdown() {
-    const now = Date.now();
-    const remaining = Math.max(0, COUNTDOWN_END - now);
-    const progress = Math.min(1, Math.max(0, (now - COUNTDOWN_START) / (COUNTDOWN_END - COUNTDOWN_START)));
-    const totalSeconds = Math.floor(remaining / 1000);
-
-    parts.days.textContent = pad(Math.floor(totalSeconds / 86400));
-    parts.hours.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
-    parts.minutes.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
-    parts.seconds.textContent = pad(totalSeconds % 60);
-    cover.style.setProperty('--reveal', progress.toFixed(4));
-
-    if (remaining === 0) {
-      countdown.classList.add('is-done');
-      // SOLUÇÃO 3: Impede o erro ao zerar a contagem, caso o "note" não exista
-      if (note) {
-        note.textContent = 'Single disponível agora.';
-      }
-      return false;
-    }
-    return true;
-  }
-
-  if (tickCountdown()) {
-    const countdownInterval = setInterval(() => {
-      if (!tickCountdown()) {
-        clearInterval(countdownInterval);
-      }
-    }, 1000);
-  }
 }
 
 document.querySelector('#year').textContent = new Date().getFullYear();
